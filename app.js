@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const connectDB = require('./config/db');
+const user = require('./model/user');
 
 //DB Connection
 connectDB();
@@ -15,8 +16,18 @@ const port = process.env.PORT || 5000;
 app.get('/', (req, res) => res.json({message:'Hello Bilal'}));
 
 app.post('/register',(req, res) => {
-    const {userName, pass}  = req.body;
-    console.log(userName, pass);
+    const {name, email, pass}  = req.body;
+    //console.log(userName, pass);
+    /* We used JS Object short hand while setting varaible names on 
+    req.body and user schema */
+    const newUser = new user({
+        name,
+        email,
+        pass
+    });
+
+    newUser.save();
+
     res.json({status: "success"});
 });
 
