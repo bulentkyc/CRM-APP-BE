@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const db = 'mongodb+srv://admin:ir10etTFL4R4n20l@my-projects-41x9h.mongodb.net/CRM_APP?retryWrites=true&w=majority';
+
 
 const connectDB = async () => {
     try {
