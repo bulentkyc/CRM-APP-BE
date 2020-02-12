@@ -17,8 +17,11 @@ exports.postRegister =  async (req,res) => {
     //let userCheck = new user;
     let userCheck = await user.findOne({email});
 
-    if(userCheck) res.json({status: 'failed', message: 'Already in use!'});
-
+    if(userCheck){
+        res.json({status: 'failed', message: 'Already in use!'});
+        return;
+    }
+    console.log('hey');
     pass = await bcrypt.hash(pass, 10);
 
     const newUser = new user({
@@ -36,4 +39,37 @@ exports.postRegister =  async (req,res) => {
     });
 
     
+}
+
+
+exports.postLogin = (req,res)=>{
+    const {email,pass} = req.body;
+    //const pass = req.body.pass
+    //console.log({email,pass});
+    user.findOne({email}, (err, result)=>{
+        if (err) {
+            res.json({status: 'failed', message: err});
+        } else if(!result){
+            res.json({status: "failed", message: "email or password is wrong!"});
+        }else {
+            bcrypt.compare(pass, result.pass).then(async (isPassCorrect) => {
+                //console.log(isPassCorrect);
+                if (isPassCorrect) {
+                    
+                    //Create Token
+                    console.log(result);
+                    const token = await signToken(result.id);
+                    res.json({
+                        status: "success",
+                        message: "Congrats! You logged in successfully",
+                        token
+                    });
+
+                } else{
+                    res.json({status: "failed", message: "email or password is wrong!"});
+                }
+                
+            });
+        }
+    });
 }
