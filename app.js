@@ -1,10 +1,20 @@
 const express = require('express');
 const app = express();
 const connectDB = require('./config/db');
+const path = require('path');
+const bodyParser = require('body-parser');
+
 require('dotenv').config();
 //let currentUserId;
 //DB Connection
 connectDB();
+
+app.use(bodyParser.json());
+app.use(bodyParser.text());
+
+app.use(express.static(path.join(__dirname + '/public')));
+
+
 //CORS SETUP-------------------------------------------
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*"); //Which adresses to allow to reach our API
